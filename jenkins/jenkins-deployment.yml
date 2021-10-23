@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 0
+      containers:
+      - name: jenkins
+        image: registry.app.corpintra.net/itse-nifi/jenkins:2.112
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+        volumeMounts:
+          - mountPath: /var/jenkins_home
+            name: jenkins-pv
+      volumes:
+      - name: jenkins-pv
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
