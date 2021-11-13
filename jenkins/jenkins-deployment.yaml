@@ -18,7 +18,7 @@ spec:
         runAsUser: 0
       containers:
       - name: jenkins
-        image: registry.app.corpintra.net/itse-nifi/jenkins:2.112
+        image: 
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
