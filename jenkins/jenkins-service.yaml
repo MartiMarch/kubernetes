@@ -10,5 +10,5 @@ spec:
   ports:
     - protocol: TCP
       nodePort: 38080
-      tagetPort: 8080
+      targetPort: 8080
   type: NodePort
