@@ -8,7 +8,6 @@ spec:
   selector:
     app: jenkins
   ports:
-    - protocol: TCP
-      nodePort: 38080
-      targetPort: 8080
+    - nodePort: 38080
+      port: 8080
   type: NodePort
