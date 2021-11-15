@@ -97,7 +97,7 @@
       state: started
       enabled: yes
 
-  - name: Creando carpetaa para Kubernetes
+  - name: Creando carpeta para Kubernetes
     ansible.builtin.file:
       path: /kubernetes
       state: directory
@@ -258,3 +258,36 @@
 
   - name: Cargando el Deployment de Nexus 3
     shell: chdir=/kubernetes kubectl -n nexus3 apply -f nexus3-deployment.yaml
+
+  - name: Creando el nombre de espacios para SonarQube
+    shell: kubectl create namespace sonar
+    ignore_errors: yes
+
+  - name: Descargando la imagen de SonarQube
+    shell: chdir=/kubernetes curl -o ./sonar-Dockerfile "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-Dockerfile.dockerfile"
+
+  - name: Instalando la imagen de Sonar
+    shell: chdir=/kubernetes docker build -t jenkins -f ./jenkins-Dockerfile .
+   - name: Descargando el volumen persistente deSonarQube
+    shell: chdir=/kubernetes curl -o ./sonar-pv.yml "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-pv.yml"
+
+  - name: Descargando la reclamacion de volumen persistente
+    shell: chdir=/kubernetes curl -o ./sonar-pvc.yml "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-pvc.yml"
+
+  - name: Descargando el servicio de SonarQube
+    shell: chdir=/kubernetes curl -o ./sonar-service.yaml "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-service.yaml"
+
+  - name: Descargando el deployment de SonarQube
+    shell: chdir=/kubernetes curl -o ./sonar-deployment.yaml "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-deployment.yaml"
+
+  - name: Cargando el volumen persistente de SonarQube
+    shell: chdir=/kubernetes kubectl -n sonar apply -f sonar-pv.yml
+
+  - name: Cargando la reclamacion de volumen persistente de SonarQube
+    shell: chdir=/kubernetes kubectl -n sonar apply -f sonar-pvc.yml
+
+  - name: Cargando el servicio de SonarQube
+    shell: chdir=/kubernetes kubectl -n sonar apply -f sonar-service.yaml
+
+  - name: Cargando el deployment de SonarQube
+    shell: chdir=/kubernetes kubectl -n sonar apply -f sonar-deployment.yaml
