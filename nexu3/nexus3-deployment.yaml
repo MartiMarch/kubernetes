@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus3
+  namespace: nexus3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus3
+  template:
+    metadata:
+      labels:
+        app: nexus3
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 0
+      containers:
+      - name: nexus3
+        image: sonatype/nexus3
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8081
+        volumeMounts:
+          - mountPath: /var/nexus-data
+            name: nexus3-pv
+      volumes:
+      - name: nexus3-pv
+        persistentVolumeClaim:
+          claimName: nexus3-pvc
