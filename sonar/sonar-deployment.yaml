@@ -24,9 +24,9 @@ spec:
           - containerPort: 9000
         volumeMounts:
           - mountPath: /opt/sonarqube/data
-            name: sonar-pv-data
+            name: sonar-pv
           - mountPath: /opt/sonarqube/extensions
-            name: sonar-pv-data-extensions
+            name: sonar-pv
       volumes:
       - name: sonar-pv
         persistentVolumeClaim:
