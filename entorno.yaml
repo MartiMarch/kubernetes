@@ -268,7 +268,8 @@
 
   - name: Instalando la imagen de Sonar
     shell: chdir=/kubernetes docker build -t jenkins -f ./jenkins-Dockerfile .
-   - name: Descargando el volumen persistente deSonarQube
+
+  - name: Descargando el volumen persistente deSonarQube
     shell: chdir=/kubernetes curl -o ./sonar-pv.yml "https://raw.githubusercontent.com/MartiMarch/Kubernetes/main/sonar/sonar-pv.yml"
 
   - name: Descargando la reclamacion de volumen persistente
