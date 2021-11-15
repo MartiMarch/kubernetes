@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonar
+  namespace: sonar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonar
+  template:
+    metadata:
+      labels:
+        app: sonar
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 0
+      containers:
+      - name: sonar
+        image: sonarqube:8.9-community
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9000
+        volumeMounts:
+          - mountPath: /opt/sonarqube
+            name: jenkins-pv
+      volumes:
+      - name: sonar-pv
+        persistentVolumeClaim:
+          claimName: sonar-pvc
