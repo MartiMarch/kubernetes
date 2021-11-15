@@ -24,7 +24,7 @@ spec:
           - containerPort: 9000
         volumeMounts:
           - mountPath: /opt/sonarqube
-            name: jenkins-pv
+            name: sonar-pv
       volumes:
       - name: sonar-pv
         persistentVolumeClaim:
