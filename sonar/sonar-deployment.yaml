@@ -23,7 +23,7 @@ spec:
         ports:
           - containerPort: 9000
         volumeMounts:
-          - mountPath: /opt/sonarqube
+          - mountPath: /opt/sonarqube/data
             name: sonar-pv
       volumes:
       - name: sonar-pv
