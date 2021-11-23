@@ -1,7 +1,14 @@
-FROM jenkins/jenkins:lts
-ENV JAVA_OPTS="-Xmx8192m"
-ENV JENKINS_OPTS=" --handlerCountMax=300 --logfile=/var/log/jenkins/jenkins.log"
-USER root
-RUN mkdir /var/log/jenkins
-RUN chown -R jenkins:jenkins /var/log/jenkins
-USER jenkins
+FROM centos:8
+EXPOSE 8080
+RUN groupadd -g 1000 jenkins
+RUN useradd jenkins -u 1000 -g 1000 -m -s /bin/bash
+USER 0
+RUN yum -y install java-11-openjdk-devel
+RUN curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo > /etc/yum.repos.d/jenkins.repo
+RUN rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+RUN yum -y install epel-release
+RUN yum -y install daemonize
+RUN yum -y install jenkins.noarch --nogpgcheck
+RUN yum -y install jenkins
+RUN chown jenkins:jenkins /var/lib/jenkins
+RUN system
