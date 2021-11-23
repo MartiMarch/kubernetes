@@ -11,4 +11,5 @@ RUN yum -y install daemonize
 RUN yum -y install jenkins.noarch --nogpgcheck
 RUN yum -y install jenkins
 RUN chown jenkins:jenkins /var/lib/jenkins
-RUN system
+RUN systemctl enable jenkins
+USER 1000
