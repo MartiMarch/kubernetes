@@ -1,5 +1,8 @@
 FROM centos:8
 EXPOSE 8080
+EXPOSE 80
+EXPOSE 443
+EXPOSE 8443
 RUN groupadd -g 1000 jenkins
 RUN useradd jenkins -u 1000 -g 1000 -m -s /bin/bash
 USER 0
