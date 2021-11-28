@@ -292,3 +292,6 @@
 
   - name: Cargando el deployment de SonarQube
     shell: chdir=/kubernetes kubectl -n sonar apply -f sonar-deployment.yaml
+
+  - name: Deshabilitando el modo hibernacion
+    shell: systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
