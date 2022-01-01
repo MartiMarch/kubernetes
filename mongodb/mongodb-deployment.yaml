@@ -17,8 +17,10 @@ spec:
       - name: mongodb
         image: mongodb
         imagePullPolicy: IfNotPresent
-        command: ["/bin/sh"]
-        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        command:
+        - "mongod"
+        - "--bind_ip"
+        - "0.0.0.0"
         volumeMounts:
           - mountPath: /data
             name: mongodb
