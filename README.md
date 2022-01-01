@@ -35,4 +35,12 @@ It's possible to install all the YAML files with Ansible over Centos 7. All the 
       30003
     </td>
   </tr>
+  <tr>
+    <td>
+      MongoDB
+    </td>
+    <td>
+       30004
+    </td>
+  </tr>
 </table>
