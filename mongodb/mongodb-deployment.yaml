@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongodb
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        volumeMounts:
+          - mountPath: /data
+            name: mongodb
+        ports:
+          - containerPort: 27017
+      volumes:
+      - name: mongodb
+        persistentVolumeClaim:
+          claimName: mongodb-pvc
