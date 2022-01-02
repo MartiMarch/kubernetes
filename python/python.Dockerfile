@@ -12,4 +12,4 @@ RUN pip install dnspython
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 RUN echo "set tabstop=4" >> ~/.vimrc
 RUN mkdir /python
-CMD bash -c "'nameserver 8.8.8.8' >> /etc/resolv.conf"
+CMD bash -c "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
