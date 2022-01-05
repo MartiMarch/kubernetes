@@ -1,139 +1,50 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: metrics-server
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    k8s-app: metrics-server
-    rbac.authorization.k8s.io/aggregate-to-admin: "true"
-    rbac.authorization.k8s.io/aggregate-to-edit: "true"
-    rbac.authorization.k8s.io/aggregate-to-view: "true"
-  name: system:aggregated-metrics-reader
-rules:
-- apiGroups:
-  - metrics.k8s.io
-  resources:
-  - pods
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: system:metrics-server
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - nodes
-  - nodes/stats
-  - namespaces
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: metrics-server-auth-reader
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: extension-apiserver-authentication-reader
-subjects:
-- kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: metrics-server:system:auth-delegator
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:auth-delegator
-subjects:
-- kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: system:metrics-server
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:metrics-server
-subjects:
-- kind: ServiceAccount
-  name: metrics-server
-  namespace: kube-system
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: metrics-server
-  namespace: kube-system
-spec:
-  ports:
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: https
-  selector:
-    k8s-app: metrics-server
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: metrics-server
+    meta.helm.sh/release-namespace: kube-system
+  creationTimestamp: "2022-01-05T13:57:44Z"
+  generation: 1
   labels:
-    k8s-app: metrics-server
+    app.kubernetes.io/instance: metrics-server
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: metrics-server
+    app.kubernetes.io/version: 0.5.2
+    helm.sh/chart: metrics-server-3.7.0
   name: metrics-server
   namespace: kube-system
+  resourceVersion: "1831"
+  uid: 6efb2047-0095-48d5-9198-2f0d064db20a
 spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      k8s-app: metrics-server
+      app.kubernetes.io/instance: metrics-server
+      app.kubernetes.io/name: metrics-server
   strategy:
     rollingUpdate:
-      maxUnavailable: 0
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        k8s-app: metrics-server
+        app.kubernetes.io/instance: metrics-server
+        app.kubernetes.io/name: metrics-server
     spec:
       containers:
       - args:
-        - --cert-dir=/tmp
         - --secure-port=4443
+        - --cert-dir=/tmp
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --kubelet-use-node-status-port
-        image: k8s.gcr.io/metrics-server/metrics-server:v0.4.1
+        - --metric-resolution=15s
+        image: k8s.gcr.io/metrics-server/metrics-server:v0.5.2
         imagePullPolicy: IfNotPresent
         command:
         - /metrics-server
@@ -145,6 +56,8 @@ spec:
             port: https
             scheme: HTTPS
           periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
         name: metrics-server
         ports:
         - containerPort: 4443
@@ -156,34 +69,29 @@ spec:
             path: /readyz
             port: https
             scheme: HTTPS
+          initialDelaySeconds: 20
           periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
         securityContext:
+          allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /tmp
-          name: tmp-dir
-      nodeSelector:
-        kubernetes.io/os: linux
+          name: tmp
+      dnsPolicy: ClusterFirst
       priorityClassName: system-cluster-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: metrics-server
       serviceAccountName: metrics-server
+      terminationGracePeriodSeconds: 30
       volumes:
       - emptyDir: {}
-        name: tmp-dir
----
-apiVersion: apiregistration.k8s.io/v1
-kind: APIService
-metadata:
-  labels:
-    k8s-app: metrics-server
-  name: v1beta1.metrics.k8s.io
-spec:
-  group: metrics.k8s.io
-  groupPriorityMinimum: 100
-  insecureSkipTLSVerify: true
-  service:
-    name: metrics-server
-    namespace: kube-system
-  version: v1beta1
-  versionPriority: 100
+        name: tmp
