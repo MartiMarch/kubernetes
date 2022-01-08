@@ -21,7 +21,7 @@ spec:
         image: sonatype/nexus3
         resources:
           limits:
-            memory: 1300Mi
+            memory: 1800Mi
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8081
