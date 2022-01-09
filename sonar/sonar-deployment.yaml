@@ -20,6 +20,9 @@ spec:
       - name: sonar
         image: sonarqube:8.9-community
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 1300Mi
         ports:
           - containerPort: 9000
         volumeMounts:
