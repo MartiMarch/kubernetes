@@ -108,7 +108,6 @@ pipeline{
                                 modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
                                 modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
                             }
-                            sh "kubectl --namespace pro apply -f ./Kubernetes/${NOMBRE_MS}"
                             if(service != "")
                             {
                                 puerto_pro = getPort(FIRST_RANGE_PORT, FINAL_RANGE_PORT, USED_PORTS, NOMBRE_MS + "_pro", KNOWED_PORTS)
@@ -119,11 +118,11 @@ pipeline{
                                 }
                                 else
                                 {
-                                    echo "${puerto_pro}"
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
                                     modificarArchivo(NOMBRE_MS, service, "pro_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_pro))
                                 }
                             }
+                            sh "kubectl --namespace pro apply -f ./Kubernetes/${NOMBRE_MS}"
                             dir('Kubernetes'){
                                 sh "git init"
                                 sh "git add used_ports"
