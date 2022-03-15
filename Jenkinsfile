@@ -134,6 +134,11 @@ pipeline{
                                 withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
                                     sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
                                 }
+                                sh "git add knowed_ports"
+                                sh "git commit -m \"Updating knowed ports files\""
+                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                }
                             }
                         }
                         if(INT.toBoolean())
