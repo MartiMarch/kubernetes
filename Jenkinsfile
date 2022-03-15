@@ -77,7 +77,7 @@ pipeline{
                                 else
                                 {
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
-                                    modificarArchivo(NOMBRE_MS, service, "temp_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_int))
+                                    modificarArchivo(NOMBRE_MS, service, "int_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_int))
                                 }
                             }
                             sh "kubectl --namespace int apply -f ./Kubernetes/${NOMBRE_MS}"
@@ -119,8 +119,9 @@ pipeline{
                                 }
                                 else
                                 {
+                                    echo "${puerto_pro}"
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
-                                    modificarArchivo(NOMBRE_MS, service, "temp_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_pro))
+                                    modificarArchivo(NOMBRE_MS, service, "pro_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_pro))
                                 }
                             }
                             dir('Kubernetes'){
