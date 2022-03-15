@@ -97,20 +97,16 @@ pipeline{
                         }
                         if(PROD.toBoolean() == true)
                         {
+                            if(INT.toBoolean() == true)
+                            {
+                                sh "rm -rf *"
+                                sh "git clone https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                            }
                             if(pv != "" && pvc != "")
                             {
-                                if(INT.toBoolean() == true)
-                                {
-                                    modificarArchivo(NOMBRE_MS, pv, "pro_" + pv, "  name: ${NOMBRE_MS}-pv-pro","  name: ${NOMBRE_MS}-pv-pro")
-                                    modificarArchivo(NOMBRE_MS, pvc, "pro_" + pvc, "  name: ${NOMBRE_MS}-pvc-int","  name: ${NOMBRE_MS}-pvc-pro")
-                                    modificarArchivo(NOMBRE_MS, deployment, "pro_" + deployment, "          claimName: ${NOMBRE_MS}-pvc-int","          claimName: ${NOMBRE_MS}-pvc-pro")
-                                }
-                                else
-                                {
-                                    modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-pro")
-                                    modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
-                                    modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
-                                }
+                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-pro")
+                                modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
+                                modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
                             }
                             sh "kubectl --namespace pro apply -f ./Kubernetes/${NOMBRE_MS}"
                             if(service != "")
