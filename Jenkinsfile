@@ -62,6 +62,8 @@ pipeline{
                         {
                             if(pv != "" && pvc != "")
                             {
+                                String ruta_pv = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${pv} | egrep path:", returnStdout: true).trim()
+                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, ruta_pv, ruta_pv + "_int")
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-int")
                                 modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-int")
                                 modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-int")
@@ -104,9 +106,11 @@ pipeline{
                             }
                             if(pv != "" && pvc != "")
                             {
-                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-pro")
-                                modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
-                                modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
+                                String ruta_pv = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${pv} | egrep path:", returnStdout: true).trim()
+                                modificarArchivo(NOMBRE_MS, pv, "pro_" + pv, ruta_pv, ruta_pv + "_pro")
+                                modificarArchivo(NOMBRE_MS, pv, "pro_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-pro")
+                                modificarArchivo(NOMBRE_MS, pvc, "pro_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
+                                modificarArchivo(NOMBRE_MS, deployment, "pro_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
                             }
                             if(service != "")
                             {
