@@ -63,6 +63,7 @@ pipeline{
                             if(pv != "" && pvc != "")
                             {
                                 String ruta_pv = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${pv} | egrep path:", returnStdout: true).trim()
+                                ruta_pv = ruta_pv.replaceAll("/", "\/");
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, ruta_pv, ruta_pv.substring(0, ruta_pv.length()-1) + "_int\"")
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-int")
                                 modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-int")
