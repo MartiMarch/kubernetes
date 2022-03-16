@@ -105,8 +105,7 @@ pipeline{
                             }
                             if(pv != "" && pvc != "")
                             {
-                                String ruta_pv = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${pv} | egrep path:", returnStdout: true).trim()
-                                modificarArchivo(NOMBRE_MS, pv, "pro_" + pv, ruta_pv, ruta_pv.substring(0, ruta_pv.length()-1) + "_pro\"")
+                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "    path: \"\\/home\\/${NOMBRE_MS}\"", "    path: \"\\/home\\/${NOMBRE_MS}_pro\"")
                                 modificarArchivo(NOMBRE_MS, pv, "pro_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-pro")
                                 modificarArchivo(NOMBRE_MS, pvc, "pro_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-pro")
                                 modificarArchivo(NOMBRE_MS, deployment, "pro_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-pro")
