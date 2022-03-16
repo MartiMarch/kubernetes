@@ -62,7 +62,7 @@ pipeline{
                         {
                             if(pv != "" && pvc != "")
                             {
-                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "    path: \"/home/${NOMBRE_MS}\"", "    path: \"/home/${NOMBRE_MS}_int\"")
+                                modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "    path: \"'\/'home'\/'${NOMBRE_MS}\"", "    path: \"'\/'home'\/'${NOMBRE_MS}_int\"")
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "  name: ${NOMBRE_MS}-pv","  name: ${NOMBRE_MS}-pv-int")
                                 modificarArchivo(NOMBRE_MS, pvc, "int_" + pvc, "  name: ${NOMBRE_MS}-pvc","  name: ${NOMBRE_MS}-pvc-int")
                                 modificarArchivo(NOMBRE_MS, deployment, "int_" + deployment, "          claimName: ${NOMBRE_MS}-pvc","          claimName: ${NOMBRE_MS}-pvc-int")
