@@ -265,6 +265,7 @@ pipeline{
                             }
 
                             //Service
+                            print(servicePort)
                             if(servicePort != null)
                             {
                                 if(nodePort == null){
