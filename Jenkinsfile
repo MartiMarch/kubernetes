@@ -239,7 +239,7 @@ pipeline{
                                 if(pvStorage == "" || pvStorage == null || pvPath == "" || pvPath == null)
                                 {
                                     currentBuild.result = "FAILURE"
-                                    throw new Exception("Persistent volume claim: not defined persistent volume"))
+                                    throw new Exception("Persistent volume claim: not defined persistent volume")
                                 }
                                 else
                                 {
@@ -270,11 +270,11 @@ pipeline{
                             {
                                 if(nodePort == "" || nodePort == null){
                                     currentBuild.result = "FAILURE"
-                                    throw new Exception("Service parameter error: \"nodePort\" is null"))
+                                    throw new Exception("Service parameter error: \"nodePort\" is null")
                                 }
                                 else if(servicePort == "" || servicePort == null){
                                     currentBuild.result = "FAILURE"
-                                    throw new Exception("Service parameter error: \"servicePort\" is null"))
+                                    throw new Exception("Service parameter error: \"servicePort\" is null")
                                 }
                                 else{
                                     linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep name:", returnStdout: true).trim()
