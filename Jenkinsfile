@@ -178,19 +178,19 @@ pipeline{
                             //Deployment
                             if(name == "" || name == null){
                                 currentBuild.result = "FAILURE"
-                                throw new Exception("Deployment parameter error: \"name\" is null"))
+                                throw new Exception("Deployment parameter error: \"name\" is null")
                             }
                             else if(replicas == "" || replicas == null){
                                 currentBuild.result = "FAILURE"
-                                throw new Exception("Deployment parameter error: \"replicas\" is null"))
+                                throw new Exception("Deployment parameter error: \"replicas\" is null")
                             }
                             else if(namespace == "" || namespace == null){
                                 currentBuild.result = "FAILURE"
-                                throw new Exception("Deployment parameter error: \"namespace\" is null"))
+                                throw new Exception("Deployment parameter error: \"namespace\" is null")
                             }
                             else if(imageName == "" || imageName == null){
                                 currentBuild.result = "FAILURE"
-                                throw new Exception("Deployment parameter error: \"imageName\" is null"))
+                                throw new Exception("Deployment parameter error: \"imageName\" is null")
                             }
                             else{
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | head -1", returnStdout: true).trim()
