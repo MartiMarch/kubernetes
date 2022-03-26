@@ -149,7 +149,7 @@ pipeline{
                         }
                         else if(TEMPLATE.toBoolean() == true)
                         {
-                            def props = readProperties  file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
+                            def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
                             String linea = ""; 
 
                             //Deployment
@@ -210,7 +210,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
-                                if((mounthPath != "" || port != null) && (mountName != "" || mountName != null))
+                                if((mountPath != "" || port != null) && (mountName != "" || mountName != null))
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
