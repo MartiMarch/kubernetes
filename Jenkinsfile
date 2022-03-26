@@ -149,7 +149,7 @@ pipeline{
                         }
                         else if(TEMPLATE.toBoolean() == true)
                         {
-                            def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
+                            def props = readProperties  file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
                             String linea = ""; 
 
                             //Deployment
