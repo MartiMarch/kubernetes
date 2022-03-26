@@ -149,31 +149,29 @@ pipeline{
                         }
                         else if(TEMPLATE.toBoolean() == true)
                         {
-                            InputStream inProp = new FileInputStream("${WORKSPACE}/Kubernetes/template/microservicios.properties");
-                            Properties prop = new Properties();
-                            prop.load(inProp);
+                            def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
                             String linea = ""; 
 
                             //Deployment
-                            String name = (String) prop.get("name");
-                            String replicas = (String) prop.get("replicas");
-                            String namespace = (String) prop.get("namespace");
-                            String imageName = (String) prop.get("imageName");
-                            String command = (String) prop.get("command");
-                            String mountPath = (String) prop.get("mountPath");
-                            String mountName = (String) prop.get("mountName");
-                            String port = (String) prop.get("port");
+                            String name = props["name"];
+                            String replicas = props["replicas"];
+                            String namespace = props["namespace"];
+                            String imageName = props["imageName"];
+                            String command = props["command"];
+                            String mountPath = props["mountPath"];
+                            String mountName = props["mountName"];
+                            String port = props["port"];
 
                             //Persistent volume claim
-                            String pvcStorage = (String) prop.get("pvcStorage");
+                            String pvcStorage = props["pvcStorage"];
 
                             //Persistent Volume
-                            String pvStorage = (String) prop.get("pvStorage");
-                            String pvPath = (String) prop.get("pvPath");
+                            String pvStorage = props["pvStorage"];
+                            String pvPath = props["pvPath"];
 
                             //Service
-                            String nodePort = (String) prop.get("nodePort");
-                            String servicePort = (String) prop.get("servicePort");
+                            String nodePort = props["nodePort"];
+                            String servicePort = props["servicePort"];
 
                             //Deployment
                             if(name == "" || name == null){
