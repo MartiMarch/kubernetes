@@ -223,7 +223,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
                                 }
-                                if(volumeClaim.length() == 0 || volumeClaim != null)
+                                if(volumeClaim == true)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
