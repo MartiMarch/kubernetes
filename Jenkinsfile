@@ -340,7 +340,7 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
                 puerto_libre = true;
                 port = i;
                 linea = Integer.toString(port) + "\n";
-                def archivo = new File(path)
+                archivo = new File(path)
                 archivo.append(linea)
                 archivo = new File(path2)
                 linea = Integer.toString(port) + " - " + nombre_ms + "\n";
