@@ -193,42 +193,42 @@ pipeline{
                             else{
                                 boolean volumeClaim = false;
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | head -1", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "   name: ${name}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "name: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep namespace:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "   namespace: ${namespace}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "namespace: ${namespace}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep replicas:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "  replicas: ${replicas}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "replicas: ${replicas}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep app: | head -1", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "      app: ${name}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep app: | tail -1", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | tail -1", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        image: ${imageName}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command != null)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "        command:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
                                 if(port != null && mountName != null)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "volumeMounts:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "- mountPath: " + mountPath)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "name: " + mountName)
                                     volumeClaim = true;
                                 }
                                 if(port != null)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "ports:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "- containerPort: " + port)
                                 }
                                 if(volumeClaim == true)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "        persistentVolumeClaim:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "          claimName: " + name + "-pvc")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "volumes:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "- name: " + mountName)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "persistentVolumeClaim:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "claimName: " + name + "-pvc")
                                 }
                             }
 
@@ -243,11 +243,11 @@ pipeline{
                                 else
                                 {
                                     linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep name:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "   name: ${name}-pvc")
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "name: ${name}-pvc")
                                     linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep namespace:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "   namespace: ${namespace}")
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "namespace: ${namespace}")
                                     linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep storage:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "      storage: ${pvcStorage}")
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "storage: ${pvcStorage}")
                                 }
                             }
 
@@ -255,37 +255,37 @@ pipeline{
                             if(pvcStorage != null)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
-                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "   name: ${name}-pv")
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "name: ${name}-pv")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep namespace:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "  namespace: ${namespace}")
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "namespace: ${namespace}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "    storage: ${pvStorage}")
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "storage: ${pvStorage}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
-                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "    path: ${pvPath}")
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
                             }
 
                             //Service
                             if(servicePort != null)
                             {
-                                if(nodePort != null){
+                                if(nodePort == null){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"nodePort\" is null")
                                 }
-                                else if(servicePort != null){
+                                else if(servicePort == null){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"servicePort\" is null")
                                 }
                                 else{
                                     linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep name:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "   name: ${name}")
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "name: ${name}")
                                     inea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep namespace:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "  namespace: ${namespace}")
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "namespace: ${namespace}")
                                     linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep app: | head -1", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "    app: ${name}")
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "app: ${name}")
                                     linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep nodePort:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "    - nodePort: ${nodePort}")
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "- nodePort: ${nodePort}")
                                     linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
-                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "      port: ${servicePort}")
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "port: ${servicePort}")
                                 }
                             }
                         }
