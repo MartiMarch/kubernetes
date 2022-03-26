@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.*;
-import com.google.common.base.Strings;
 
 pipeline{
     agent any
@@ -175,19 +174,19 @@ pipeline{
                             String servicePort = props["servicePort"];
 
                             //Deployment
-                            if(!Strings.isNullEmpty(name)){
+                            if(name.length() > 0 || name == null){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"name\" is null")
                             }
-                            else if(!Strings.isNullEmpty(replicas)){
+                            else if(replicas.length() > 0 || replicas == null){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"replicas\" is null")
                             }
-                            else if(!Strings.isNullEmpty(namespace)){
+                            else if(namespace.length() > 0 || namespace == null){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"namespace\" is null")
                             }
-                            else if(!Strings.isNullEmpty(imageName)){
+                            else if(imageName.length() > 0 || imageName == null){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"imageName\" is null")
                             }
@@ -207,24 +206,24 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        image: ${imageName}")
-                                if(!Strings.isNullEmpty(command))
+                                if(command.length() > 0 || command != null)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
-                                if(!Strings.isNullEmpty(mountPath) && isNullEmpty(mountName))
+                                if((mountPath.length() > 0 || port != null) && (mountName.length() > 0 || mountName != null))
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
                                     addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
                                     volumeClaim = true;
                                 }
-                                if(!Strings.isNullEmpty(port))
+                                if(port.length() > 0 || port != null)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
                                 }
-                                if(!Strings.isNullEmpty(volumeClaim))
+                                if(volumeClaim.length() > 0 || volumeClaim != null)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
@@ -234,11 +233,11 @@ pipeline{
                             }
 
                             //Persistent volume claim
-                            if(!Strings.isNullEmpty(pvcStorage))
+                            if(pvcStorage != "" || pvcStorage != null)
                             {
                                 print(pvStorage)
                                 print(pvPath)
-                                if(!Strings.isNullEmpty(pvStorage) && !Strings.isNullEmpty(pvPath))
+                                if((pvStorage.length() > 0 || pvStorage == null) && (pvPath.length() > 0 || pvPath == null))
                                 {
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Persistent volume claim: not defined persistent volume")
@@ -255,7 +254,7 @@ pipeline{
                             }
 
                             //Persistent Volume
-                            if(!Strings.isNullEmpty(pvcStorage))
+                            if(pvcStorage.length() > 0 || pvcStorage != null)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "   name: ${name}-pv")
@@ -268,13 +267,13 @@ pipeline{
                             }
 
                             //Service
-                            if(!Strings.isNullEmpty(nodePort))
+                            if(nodePort.length() > 0 || servicePort != null)
                             {
-                                if(!Strings.isNullEmpty(nodePort)){
+                                if(nodePort.length() > 0 || nodePort == null){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"nodePort\" is null")
                                 }
-                                else if(!Strings.isNullEmpty(servicePort)){
+                                else if(servicePort.length() > 0 || servicePort == null){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"servicePort\" is null")
                                 }
