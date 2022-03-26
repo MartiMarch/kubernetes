@@ -235,7 +235,9 @@ pipeline{
                             //Persistent volume claim
                             if(pvcStorage != "" || pvcStorage != null)
                             {
-                                if(pvStorage == "" || pvStorage == null || pvPath == "" || pvPath == null)
+                                print(pvStorage)
+                                print(pvPath)
+                                if((pvStorage == "" || pvStorage == null) && (pvPath == "" || pvPath == null))
                                 {
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Persistent volume claim: not defined persistent volume")
