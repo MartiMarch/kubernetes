@@ -357,7 +357,7 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
 def addLine(String path, String nuevaLinea)
 {
     try{
-        def archivo = new File(path)
+        def archivo = readFile(file: path)
         archivo.append(nuevaLinea)
     }
     catch(IOException e){
