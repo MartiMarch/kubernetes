@@ -26,24 +26,27 @@ pipeline{
         stage("Docker"){
             steps{
                 script{
-                    String ls = sh(script: "ls ./Kubernetes", returnStdout: true).trim()
-                    if(ls.contains(NOMBRE_MS))
+                    if(TEMPLATE.toBoolean() != true)
                     {
-                        String dockerfile = buscarArchivo(NOMBRE_MS, "Dockerfile")
-                        if(dockerfile != "")
+                        String ls = sh(script: "ls ./Kubernetes", returnStdout: true).trim()
+                        if(ls.contains(NOMBRE_MS))
                         {
-                            sh "docker image build -f ./Kubernetes/${NOMBRE_MS}/${dockerfile} -t ${NOMBRE_MS} ."
+                            String dockerfile = buscarArchivo(NOMBRE_MS, "Dockerfile")
+                            if(dockerfile != "")
+                            {
+                                sh "docker image build -f ./Kubernetes/${NOMBRE_MS}/${dockerfile} -t ${NOMBRE_MS} ."
+                            }
+                            else
+                            {
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("No existe ningun Dockerfile en el repositorio.")
+                            }
                         }
                         else
                         {
                             currentBuild.result = "FAILURE"
-                            throw new Exception("No existe ningun Dockerfile en el repositorio.")
+                            throw new Exception("El microservicio ${NOMBRE_MS} no existe en el directorio de GitHub.")
                         }
-                    }
-                    else
-                    {
-                        currentBuild.result = "FAILURE"
-                        throw new Exception("El microservicio ${NOMBRE_MS} no existe en el directorio de GitHub.")
                     }
                 }
             }
