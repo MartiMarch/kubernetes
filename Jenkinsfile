@@ -52,14 +52,18 @@ pipeline{
             steps{
                 withKubeConfig([credentialsId: 'KUBECONFIG']){
                     script{
-                        String pv = buscarArchivo(NOMBRE_MS, "-pv.y")
-                        String pvc = buscarArchivo(NOMBRE_MS, "-pvc.y")
-                        String deployment = buscarArchivo(NOMBRE_MS, "-deployment.y")
-                        String service = buscarArchivo(NOMBRE_MS, "-service.y")
+                        String pv = ""
+                        String pvc = ""
+                        String deployment = ""
+                        String service = ""
                         int puerto_int = 0
                         int puerto_pro = 0
                         if(INT.toBoolean() == true)
                         {
+                            pv = buscarArchivo(NOMBRE_MS, "-pv.y")
+                            pvc = buscarArchivo(NOMBRE_MS, "-pvc.y")
+                            deployment = buscarArchivo(NOMBRE_MS, "-deployment.y")
+                            service = buscarArchivo(NOMBRE_MS, "-service.y")
                             if(pv != "" && pvc != "")
                             {
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "    path: \"\\/home\\/${NOMBRE_MS}\"", "    path: \"\\/home\\/${NOMBRE_MS}_int\"")
