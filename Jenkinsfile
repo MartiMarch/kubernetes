@@ -80,23 +80,24 @@ pipeline{
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
                                     modificarArchivo(NOMBRE_MS, service, "int_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_int))
                                 }
+                                dir('Kubernetes'){
+                                    sh "git init"
+                                    sh "git add used_ports"
+                                    sh "git commit -m \"Updating used ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                    sh "git add knowed_ports"
+                                    sh "git commit -m \"Updating knowed ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                }
                             }
                             sh "kubectl --namespace int apply -f ./Kubernetes/${NOMBRE_MS}"
-                            dir('Kubernetes'){
-                                sh "git init"
-                                sh "git add used_ports"
-                                sh "git commit -m \"Updating used ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                }
-                                sh "git add knowed_ports"
-                                sh "git commit -m \"Updating knowed ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                }
-                            }
+                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de integración sobre el puerto ${Integer.toString(puerto_int)}"
                         }
-                        if(PROD.toBoolean() == true)
+                        else if(PROD.toBoolean() == true)
                         {
                             if(INT.toBoolean() == true)
                             {
@@ -123,29 +124,165 @@ pipeline{
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
                                     modificarArchivo(NOMBRE_MS, service, "pro_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_pro))
                                 }
+                                dir('Kubernetes'){
+                                    sh "git init"
+                                    sh "git add used_ports"
+                                    sh "git commit -m \"Updating used ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                    sh "git add knowed_ports"
+                                    sh "git commit -m \"Updating knowed ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                }
                             }
                             sh "kubectl --namespace pro apply -f ./Kubernetes/${NOMBRE_MS}"
-                            dir('Kubernetes'){
-                                sh "git init"
-                                sh "git add used_ports"
-                                sh "git commit -m \"Updating used ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de producción sobre el puerto ${Integer.toString(puerto_pro)}"
+                        }
+                        else if(TEMPLATE.toBoolean() == true)
+                        {
+                            InputStream inProp = new FileInputStream("${WORKSPACE}/Kubernetes/template/microservicios.properties");
+                            Properties prop = new Properties();
+                            prop.load(inProp);
+                            String linea = ""; 
+
+                            //Deployment
+                            String name = (String) prop.get("name");
+                            String replicas = (String) prop.get("replicas");
+                            String namespace = (String) prop.get("namespace");
+                            String imageName = (String) prop.get("imageName");
+                            String command = (String) prop.get("command");
+                            String mountPath = (String) prop.get("mountPath");
+                            String mountName = (String) prop.get("mountName");
+                            String port = (String) prop.get("port");
+
+                            //Persistent volume claim
+                            String pvcStorage = (String) prop.get("pvcStorage");
+
+                            //Persistent Volume
+                            String pvStorage = (String) prop.get("pvStorage");
+                            String pvPath = (String) prop.get("pvPath");
+
+                            //Service
+                            String nodePort = (String) prop.get("nodePort");
+                            String servicePort = (String) prop.get("servicePort");
+
+                            //Deployment
+                            if(name == "" || name == null){
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deployment parameter error: \"name\" is null"))
+                            }
+                            else if(replicas == "" || replicas == null){
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deployment parameter error: \"replicas\" is null"))
+                            }
+                            else if(namespace == "" || namespace == null){
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deployment parameter error: \"namespace\" is null"))
+                            }
+                            else if(imageName == "" || imageName == null){
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deployment parameter error: \"imageName\" is null"))
+                            }
+                            else{
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | head -1", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "   name: ${name}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep namespace:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "   namespace: ${namespace}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep replicas:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "  replicas: ${replicas}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep app: | head -1", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "      app: ${name}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep app: | tail -1", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | tail -1", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        image: ${imageName}")
+                                if(command != "" || command != null)
+                                {
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        command:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
-                                sh "git add knowed_ports"
-                                sh "git commit -m \"Updating knowed ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                if((mounthPath != "" || port != null) && (mountName != "" || mountName != null))
+                                {
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
+                                    boolean volumeClain = true;
+                                }
+                                if(port != "" || port != null)
+                                {
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
+                                }
+                                if(volumeClain)
+                                {
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        persistentVolumeClaim:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          claimName: " + name + "-pvc")
                                 }
                             }
-                        }
-                        if(INT.toBoolean())
-                        {
-                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de integración sobre el puerto ${Integer.toString(puerto_int)}"
-                        }
-                        if(PROD.toBoolean() == true)
-                        {
-                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de producción sobre el puerto ${Integer.toString(puerto_pro)}"
+
+                            //Persistent volume claim
+                            if(pvcStorage != "" || pvcStorage != null)
+                            {
+                                if(pvStorage == "" || pvStorage == null || pvPath == "" || pvPath == null)
+                                {
+                                    currentBuild.result = "FAILURE"
+                                    throw new Exception("Persistent volume claim: not defined persistent volume"))
+                                }
+                                else
+                                {
+                                    linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep name:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "   name: ${name}-pvc")
+                                    linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep namespace:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "   namespace: ${namespace}")
+                                    linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep storage:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "      storage: ${pvcStorage}")
+                                }
+                            }
+
+                            //Persistent Volume
+                            if(pvcStorage != "" || pvcStorage != null)
+                            {
+                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "   name: ${name}-pv")
+                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep namespace:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "  namespace: ${namespace}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "    storage: ${pvStorage}")
+                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
+                                modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "    path: ${pvPath}")
+                            }
+
+                            //Service
+                            if(nodePort != "" || servicePort != "")
+                            {
+                                if(nodePort == "" || nodePort == null){
+                                    currentBuild.result = "FAILURE"
+                                    throw new Exception("Service parameter error: \"nodePort\" is null"))
+                                }
+                                else if(servicePort == "" || servicePort == null){
+                                    currentBuild.result = "FAILURE"
+                                    throw new Exception("Service parameter error: \"servicePort\" is null"))
+                                }
+                                else{
+                                    linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep name:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "   name: ${name}")
+                                    inea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep namespace:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "  namespace: ${namespace}")
+                                    linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep app: | head -1", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "    app: ${name}")
+                                    linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep nodePort:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "    - nodePort: ${nodePort}")
+                                    linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
+                                    modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "      port: ${servicePort}")
+                                }
+                            }
                         }
                     }
                 }
@@ -177,9 +314,9 @@ def modificarArchivo(nombre_ms, archivo, temp_archivo, lineaOriginal, lineaCambi
 
 def getPort(first_rp, final_rp, path, nombre_ms, path2)
 {
-    int port = -1;
-    ArrayList<String> ports = new ArrayList();
     try{
+        int port = -1;
+        ArrayList<String> ports = new ArrayList();
         def archivo = readFile(file: path)
         String[] contenidoArchivo = archivo.split('\n');
         for(int i = 0; i < contenidoArchivo.length; ++i)
@@ -189,24 +326,35 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
                 ports.add(contenidoArchivo[i]);
             }
         }
+        boolean puerto_libre = false;
+        for(int i = Integer.parseInt(first_rp); i < Integer.parseInt(final_rp) && puerto_libre == false; ++i)
+        {
+            if(!ports.contains(Integer.toString(i)))
+            {
+                puerto_libre = true;
+                port = i;
+                linea = Integer.toString(port) + "\n";
+                def archivo = new File(path)
+                archivo.append(linea)
+                archivo = new File(path2)
+                linea = Integer.toString(port) + " - " + nombre_ms + "\n";
+                archivo.append(linea)
+            }
+        }
     }
     catch(IOException e){
         e.printStackTrace();
     }
-    boolean puerto_libre = false;
-    for(int i = Integer.parseInt(first_rp); i < Integer.parseInt(final_rp) && puerto_libre == false; ++i)
-    {
-        if(!ports.contains(Integer.toString(i)))
-        {
-            puerto_libre = true;
-            port = i;
-            linea = Integer.toString(port) + "\n";
-            def archivo = new File(path)
-            archivo.append(linea)
-            archivo = new File(path2)
-            linea = Integer.toString(port) + " - " + nombre_ms + "\n";
-            archivo.append(linea)
-        }
-    }
     return port;
+}
+
+def addLine(String archivo, String nuevaLinea)
+{
+    try{
+        def archivo = new File(archivo)
+        archivo.append(nuevaLinea)
+    }
+    catch(IOException e){
+        e.printStackTrace();
+    }
 }
