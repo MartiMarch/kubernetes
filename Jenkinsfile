@@ -174,19 +174,19 @@ pipeline{
                             String servicePort = props["servicePort"];
 
                             //Deployment
-                            if(name.length() > 0){
+                            if(name.length() < 1){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"name\" is null")
                             }
-                            else if(replicas.length() > 0){
+                            else if(replicas.length() < 1){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"replicas\" is null")
                             }
-                            else if(namespace.length() > 0){
+                            else if(namespace.length() < 1){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"namespace\" is null")
                             }
-                            else if(imageName.length() > 0){
+                            else if(imageName.length() < 1){
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deployment parameter error: \"imageName\" is null")
                             }
@@ -206,19 +206,19 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "        image: ${imageName}")
-                                if(command.length() > 0)
+                                if(command.length() < 1)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
-                                if((mountPath.length() > 0) && (mountName.length() > 0))
+                                if((mountPath.length() < 1) && (mountName.length() < 1))
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
                                     addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
                                     volumeClaim = true;
                                 }
-                                if(port.length() > 0)
+                                if(port.length() < 1)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
@@ -233,11 +233,11 @@ pipeline{
                             }
 
                             //Persistent volume claim
-                            if(pvcStorage.length() > 0)
+                            if(pvcStorage.length() < 1)
                             {
                                 print(pvStorage)
                                 print(pvPath)
-                                if((pvStorage.length() > 0) && (pvPath.length() > 0))
+                                if((pvStorage.length() < 1) && (pvPath.length() < 1))
                                 {
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Persistent volume claim: not defined persistent volume")
@@ -254,7 +254,7 @@ pipeline{
                             }
 
                             //Persistent Volume
-                            if(pvcStorage.length() > 0)
+                            if(pvcStorage.length() < 1)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "   name: ${name}-pv")
@@ -267,13 +267,13 @@ pipeline{
                             }
 
                             //Service
-                            if(nodePort.length() > 0)
+                            if(nodePort.length() < 1)
                             {
-                                if(nodePort.length() > 0){
+                                if(nodePort.length() < 1){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"nodePort\" is null")
                                 }
-                                else if(servicePort.length() > 0){
+                                else if(servicePort.length() < 1){
                                     currentBuild.result = "FAILURE"
                                     throw new Exception("Service parameter error: \"servicePort\" is null")
                                 }
