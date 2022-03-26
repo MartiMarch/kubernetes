@@ -218,6 +218,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "name: " + mountName)
                                     volumeClaim = true;
                                 }
+                                print(port)
                                 if(port.length() > 0)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "ports:")
