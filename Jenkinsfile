@@ -106,11 +106,10 @@ pipeline{
                         }
                         else if(PROD.toBoolean() == true)
                         {
-                            if(INT.toBoolean() == true)
-                            {
-                                sh "rm -rf *"
-                                sh "git clone https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                            }
+                            pv = buscarArchivo(NOMBRE_MS, "-pv.y")
+                            pvc = buscarArchivo(NOMBRE_MS, "-pvc.y")
+                            deployment = buscarArchivo(NOMBRE_MS, "-deployment.y")
+                            service = buscarArchivo(NOMBRE_MS, "-service.y")
                             if(pv != "" && pvc != "")
                             {
                                 modificarArchivo(NOMBRE_MS, pv, "int_" + pv, "    path: \"\\/home\\/${NOMBRE_MS}\"", "    path: \"\\/home\\/${NOMBRE_MS}_pro\"")
