@@ -354,10 +354,10 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
     return port;
 }
 
-def addLine(String archivo, String nuevaLinea)
+def addLine(String path, String nuevaLinea)
 {
     try{
-        def archivo = new File(archivo)
+        def archivo = new File(path)
         archivo.append(nuevaLinea)
     }
     catch(IOException e){
