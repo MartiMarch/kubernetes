@@ -191,6 +191,7 @@ pipeline{
                                 throw new Exception("Deployment parameter error: \"imageName\" is null")
                             }
                             else{
+                                boolean volumeClaim = false;
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | head -1", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "   name: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep namespace:", returnStdout: true).trim()
@@ -215,14 +216,14 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
                                     addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
-                                    boolean volumeClain = true;
+                                    volumeClaim = true;
                                 }
                                 if(port != "" || port != null)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
                                 }
-                                if(volumeClain)
+                                if(volumeClaim)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
