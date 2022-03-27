@@ -218,9 +218,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "name: " + mountName)
                                     volumeClaim = true;
                                 }
-                                print("HOLA")
-                                print("Longitud: " + port.length() + ", Valor: " + port)
-                                if(port.length() > 0)
+                                if(port.length() != 0)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "- containerPort: " + port)
