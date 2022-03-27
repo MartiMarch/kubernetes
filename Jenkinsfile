@@ -219,7 +219,7 @@ pipeline{
                                     volumeClaim = true;
                                 }
                                 print("HOLA")
-                                print(port.length())
+                                print("Longitud: " + port.length() + ", Valor: " port)
                                 if(port.length() > 0)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "ports:")
