@@ -150,7 +150,8 @@ pipeline{
                         else if(TEMPLATE.toBoolean() == true)
                         {
                             def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
-                            String linea = ""; 
+                            String linea = "";
+                            boolean volumeClaim = false;
 
                             //Deployment
                             String name = props["name"];
@@ -191,7 +192,6 @@ pipeline{
                                 throw new Exception("Deployment parameter error: \"imageName\" is null")
                             }
                             else{
-                                boolean volumeClaim = false;
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | head -1", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "name: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep namespace:", returnStdout: true).trim()
@@ -217,7 +217,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
                                     volumeClaim = true;
                                 }
-                                if(port.length() != 0)
+                                if(port.length() > 0)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
@@ -233,7 +233,7 @@ pipeline{
                             }
 
                             //Persistent volume claim
-                            if(pvcStorage.length() > 0 && pvPath.length() > 0 && volumeClaim == true)
+                            if(pvcStorage.length() > 0)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep name:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "name: ${name}-pvc")
@@ -243,14 +243,14 @@ pipeline{
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "storage: ${pvcStorage}")
                                 sh "cat ./Kubernetes/template/template-pvc.yaml"
                             }
-                            else
+                            else if (volumeClaim)
                             {
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
                             }
 
                             //Persistent Volume
-                            if(pvStorage.length() > 0 && volumeClaim == true)
+                            if(pvStorage.length() > 0 && pvPath.length() > 0)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "name: ${name}-pv")
@@ -263,7 +263,7 @@ pipeline{
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
                                 sh "cat ./Kubernetes/template/template-pv.yaml"
                             }
-                            else
+                            else if (volumeClaim)
                             {
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
