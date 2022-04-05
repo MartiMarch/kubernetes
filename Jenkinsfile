@@ -208,27 +208,26 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "command:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", command)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        command: " + command)
                                 }
                                 if(mountPath.length() > 0 && mountName.length() > 0)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "volumeMounts:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "- mountPath: " + mountPath)
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "name: " + mountName)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
                                     volumeClaim = true;
                                 }
                                 if(port.length() != 0)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "ports:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "- containerPort: " + port)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
                                 }
                                 if(volumeClaim == true)
                                 {
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "volumes:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "- name: " + mountName)
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "persistentVolumeClaim:")
-                                    addLine("./Kubernetes/template/template-deployment.yaml", "claimName: " + name + "-pvc")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        persistentVolumeClaim:")
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "          claimName: " + name + "-pvc")
                                 }
                                 sh "cat ./Kubernetes/template/template-deployment.yaml"
                             }
