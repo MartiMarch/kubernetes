@@ -208,7 +208,7 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0)
                                 {
-                                    print("HOLA")
+                                    sh "cat ./Kubernetes/template/template-deployment.yaml"
                                     addLine("./Kubernetes/template/template-deployment.yaml", "command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
@@ -231,6 +231,7 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "persistentVolumeClaim:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "claimName: " + name + "-pvc")
                                 }
+                                sh "cat ./Kubernetes/template/template-deployment.yaml"
                             }
 
                             //Persistent volume claim
