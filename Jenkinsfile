@@ -206,10 +206,9 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
-                                print(command)
-                                print(command.getClass())
                                 if(command.length() > 0)
                                 {
+                                    print("HOLA)
                                     addLine("./Kubernetes/template/template-deployment.yaml", "command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
