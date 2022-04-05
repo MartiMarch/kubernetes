@@ -151,8 +151,8 @@ pipeline{
                         {
                             def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
                             String linea = "";
-                            boolean volumeClaim = false;
-                            boolean service = false;
+                            boolean volumeClaimExists = false;
+                            boolean serviceExists = false;
 
                             //Deployment
                             String name = props["name"];
@@ -216,14 +216,14 @@ pipeline{
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        volumeMounts:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - mountPath: " + mountPath)
                                     addLine("./Kubernetes/template/template-deployment.yaml", "            name: " + mountName)
-                                    volumeClaim = true;
+                                    volumeClaimExists = true;
                                 }
                                 if(port.length() > 0)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        ports:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "          - containerPort: " + port)
                                 }
-                                if(volumeClaim == true)
+                                if(volumeClaimExists == true)
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      volumes:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "      - name: " + mountName)
@@ -284,14 +284,14 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "port: ${servicePort}")
                                 sh "cat ./Kubernetes/template/template-service.yaml"
-                                service = true;
+                                serviceExists = true;
                             }
 
-                            if(!volumeClaim){
+                            if(!volumeClaimExists){
                                 sh "rm -rf ./Kubernetes/template/template-pv.yaml"
                                 sh "rm -rf ./Kubernetes/template/template-pvc.yaml"
                             }
-                            if(!service){
+                            if(!serviceExists){
                                 sh "rm -rf ./Kubernetes/template/template-service.yaml"
                             }
                             //sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
