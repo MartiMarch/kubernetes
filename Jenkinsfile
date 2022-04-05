@@ -295,8 +295,8 @@ pipeline{
                                 sh "rm -rf ./Kubernetes/template/template-service.yaml"
                             }
                             //sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
-                            addLine("./Kubernetes/used_ports", nodePort)
-                            addLine("./Kubernetes/knowed_ports", nodePort + "- " + name)
+                            addLine("./Kubernetes/used_ports", servicePort)
+                            addLine("./Kubernetes/knowed_ports", servicePort + "- " + name)
                             dir('Kubernetes'){
                                 sh "git init"
                                 sh "git add used_ports"
