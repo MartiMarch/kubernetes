@@ -210,7 +210,11 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0 && args.length() > 0)
                                 {
+                                    command = command.replace("[", "\\[")
+                                    command = command.replace("[", "\\]")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        command: " + command)
+                                    args = args.replace("[", "\\[")
+                                    args = args.replace("[", "\\]")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        args: " + args)
                                 }
                                 if(mountPath.length() > 0 && mountName.length() > 0)
