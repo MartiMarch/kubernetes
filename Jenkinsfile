@@ -208,7 +208,7 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0)
                                 {
-                                    print("HOLA)
+                                    print("HOLA")
                                     addLine("./Kubernetes/template/template-deployment.yaml", "command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
