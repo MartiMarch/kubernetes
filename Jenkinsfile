@@ -293,23 +293,23 @@ pipeline{
                             }
                             if(!serviceExists){
                                 sh "rm -rf ./Kubernetes/template/template-service.yaml"
+                                addLine("./Kubernetes/used_ports", servicePort)
+                                addLine("./Kubernetes/knowed_ports", servicePort + " - " + name)
+                                dir('Kubernetes'){
+                                    sh "git init"
+                                    sh "git add used_ports"
+                                    sh "git commit -m \"Updating used ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                    sh "git add knowed_ports"
+                                    sh "git commit -m \"Updating knowed ports files\""
+                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                    }
+                                }
                             }
                             sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
-                            addLine("./Kubernetes/used_ports", servicePort)
-                            addLine("./Kubernetes/knowed_ports", servicePort + " - " + name)
-                            dir('Kubernetes'){
-                                sh "git init"
-                                sh "git add used_ports"
-                                sh "git commit -m \"Updating used ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                }
-                                sh "git add knowed_ports"
-                                sh "git commit -m \"Updating knowed ports files\""
-                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                }
-                            }
                         }
                     }
                 }
