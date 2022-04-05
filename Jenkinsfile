@@ -253,7 +253,7 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "storage: ${pvStorage}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep path:", returnStdout: true).trim()
-                                pvPath = pvPath.replace("/", "\/")
+                                pvPath = pvPath.replace("/", "\\/")
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
                             }
 
