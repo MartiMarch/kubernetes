@@ -204,7 +204,7 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep app: | tail -1", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep name: | tail -1", returnStdout: true).trim()
-                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "app: ${name}")
+                                modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "- name: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0)
