@@ -160,6 +160,7 @@ pipeline{
                             String namespace = props["namespace"];
                             String imageName = props["imageName"];
                             String command = props["command"];
+                            String args = props["args"];
                             String mountPath = props["mountPath"];
                             String mountName = props["mountName"];
                             String port = props["port"];
@@ -207,9 +208,10 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "- name: ${name}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-deployment.yaml | egrep image:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
-                                if(command.length() > 0)
+                                if(command.length() > 0 && )
                                 {
                                     addLine("./Kubernetes/template/template-deployment.yaml", "        command: " + command)
+                                    addLine("./Kubernetes/template/template-deployment.yaml", "        args: " + args)
                                 }
                                 if(mountPath.length() > 0 && mountName.length() > 0)
                                 {
