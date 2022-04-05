@@ -102,7 +102,7 @@ pipeline{
                                 }
                             }
                             sh "kubectl --namespace int apply -f ./Kubernetes/${NOMBRE_MS}"
-                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de integración sobre el puerto ${Integer.toString(puerto_int)}"
+                            echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de preproduccion sobre el puerto ${Integer.toString(puerto_int)}"
                         }
                         else if(PROD.toBoolean() == true)
                         {
@@ -152,6 +152,7 @@ pipeline{
                             def props = readProperties file: "${WORKSPACE}/Kubernetes/template/microservicios.properties"
                             String linea = "";
                             boolean volumeClaim = false;
+                            boolean service = false;
 
                             //Deployment
                             String name = props["name"];
@@ -243,7 +244,7 @@ pipeline{
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "storage: ${pvcStorage}")
                                 sh "cat ./Kubernetes/template/template-pvc.yaml"
                             }
-                            else if (volumeClaim)
+                            else if(volumeClaim)
                             {
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
@@ -263,7 +264,7 @@ pipeline{
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
                                 sh "cat ./Kubernetes/template/template-pv.yaml"
                             }
-                            else if (volumeClaim)
+                            else if(volumeClaim)
                             {
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
@@ -283,6 +284,31 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "port: ${servicePort}")
                                 sh "cat ./Kubernetes/template/template-service.yaml"
+                                service = true;
+                            }
+
+                            if(!volumeClaim){
+                                sh "rm -rf ./Kubernetes/template/template-pv.yaml"
+                                sh "rm -rf ./Kubernetes/template/template-pvc.yaml"
+                            }
+                            if(!service){
+                                sh "rm -rf ./Kubernetes/template/template-service.yaml"
+                            }
+                            //sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
+                            addLine("./Kubernetes/used_ports", nodePort)
+                            addLine("./Kubernetes/knowed_ports", nodePort + "- " + name)
+                            dir('Kubernetes'){
+                                sh "git init"
+                                sh "git add used_ports"
+                                sh "git commit -m \"Updating used ports files\""
+                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                }
+                                sh "git add knowed_ports"
+                                sh "git commit -m \"Updating knowed ports files\""
+                                withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+                                    sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+                                }
                             }
                         }
                     }
