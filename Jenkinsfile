@@ -284,15 +284,6 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "port: ${servicePort}")
                                 sh "cat ./Kubernetes/template/template-service.yaml"
-                                serviceExists = true;
-                            }
-
-                            if(!volumeClaimExists){
-                                sh "rm -rf ./Kubernetes/template/template-pv.yaml"
-                                sh "rm -rf ./Kubernetes/template/template-pvc.yaml"
-                            }
-                            if(!serviceExists){
-                                sh "rm -rf ./Kubernetes/template/template-service.yaml"
                                 addLine("./Kubernetes/used_ports", servicePort)
                                 addLine("./Kubernetes/knowed_ports", servicePort + " - " + name)
                                 dir('Kubernetes'){
@@ -308,6 +299,15 @@ pipeline{
                                         sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
                                     }
                                 }
+                                serviceExists = true;
+                            }
+
+                            if(!volumeClaimExists){
+                                sh "rm -rf ./Kubernetes/template/template-pv.yaml"
+                                sh "rm -rf ./Kubernetes/template/template-pvc.yaml"
+                            }
+                            if(!serviceExists){
+                                sh "rm -rf ./Kubernetes/template/template-service.yaml"
                             }
                             sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
                         }
