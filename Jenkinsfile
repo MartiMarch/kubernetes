@@ -87,19 +87,7 @@ pipeline{
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
                                     modificarArchivo(NOMBRE_MS, service, "int_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_int))
                                 }
-                                dir('Kubernetes'){
-                                    sh "git init"
-                                    sh "git add used_ports"
-                                    sh "git commit -m \"Updating used ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                    sh "git add knowed_ports"
-                                    sh "git commit -m \"Updating knowed ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                }
+                                gitPush()
                             }
                             sh "kubectl --namespace int apply -f ./Kubernetes/${NOMBRE_MS}"
                             echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de preproduccion sobre el puerto ${Integer.toString(puerto_int)}"
@@ -130,19 +118,7 @@ pipeline{
                                     String linea_puerto = sh(script: "cat ./Kubernetes/${NOMBRE_MS}/${service} | egrep nodePort:", returnStdout: true).trim()
                                     modificarArchivo(NOMBRE_MS, service, "pro_" + service, linea_puerto, "- nodePort: " + Integer.toString(puerto_pro))
                                 }
-                                dir('Kubernetes'){
-                                    sh "git init"
-                                    sh "git add used_ports"
-                                    sh "git commit -m \"Updating used ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                    sh "git add knowed_ports"
-                                    sh "git commit -m \"Updating knowed ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                }
+                                gitPush()
                             }
                             sh "kubectl --namespace pro apply -f ./Kubernetes/${NOMBRE_MS}"
                             echo "El servicio ${NOMBRE_MS} se ha desplegado en el entorno de producción sobre el puerto ${Integer.toString(puerto_pro)}"
@@ -290,19 +266,7 @@ pipeline{
                                 sh "cat ./Kubernetes/template/template-service.yaml"
                                 addLine("./Kubernetes/used_ports", servicePort)
                                 addLine("./Kubernetes/knowed_ports", servicePort + " - " + name)
-                                dir('Kubernetes'){
-                                    sh "git init"
-                                    sh "git add used_ports"
-                                    sh "git commit -m \"Updating used ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                    sh "git add knowed_ports"
-                                    sh "git commit -m \"Updating knowed ports files\""
-                                    withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
-                                        sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
-                                    }
-                                }
+                                gitPush()
                                 serviceExists = true;
                             }
 
@@ -382,4 +346,21 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
 def addLine(String path, String line)
 {
     sh "echo \"${line}\" >> ${path}"
+}
+
+def gitPush()
+{
+    dir('Kubernetes'){
+        sh "git init"
+        sh "git add used_ports"
+        sh "git commit -m \"Updating used ports files\""
+        withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+            sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+        }
+        sh "git add knowed_ports"
+        sh "git commit -m \"Updating knowed ports files\""
+        withCredentials([string(credentialsId: 'GH_TOKEN_PER', variable: 'GH_TOKEN_PER')]){
+            sh "git push https://${GH_USER}:${GH_TOKEN_PER}@${GH_URL}"
+        }
+    }
 }
