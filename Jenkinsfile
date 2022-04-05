@@ -338,5 +338,5 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
 
 def addLine(String path, String line)
 {
-    sh "echo ${line} >> ${path}"
+    sh "echo \"${line}\" >> ${path}"
 }
