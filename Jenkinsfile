@@ -294,7 +294,7 @@ pipeline{
                             if(!serviceExists){
                                 sh "rm -rf ./Kubernetes/template/template-service.yaml"
                             }
-                            //sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
+                            sh "kubectl --namespace ${namespace} apply -f ./Kubernetes/template"
                             addLine("./Kubernetes/used_ports", servicePort)
                             addLine("./Kubernetes/knowed_ports", servicePort + " - " + name)
                             dir('Kubernetes'){
