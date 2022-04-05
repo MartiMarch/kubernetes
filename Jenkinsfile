@@ -208,7 +208,6 @@ pipeline{
                                 modificarArchivo("template", "template-deployment.yaml", "temporal_template-deployment.yaml", linea, "image: ${imageName}")
                                 if(command.length() > 0)
                                 {
-                                    sh "cat ./Kubernetes/template/template-deployment.yaml"
                                     addLine("./Kubernetes/template/template-deployment.yaml", "command:")
                                     addLine("./Kubernetes/template/template-deployment.yaml", command)
                                 }
@@ -338,13 +337,7 @@ def getPort(first_rp, final_rp, path, nombre_ms, path2)
     return port;
 }
 
-def addLine(String path, String nuevaLinea)
+def addLine(String path, String line)
 {
-    try{
-        def archivo = new File(path)
-        archivo.append(nuevaLinea)
-    }
-    catch(IOException e){
-        e.printStackTrace();
-    }
+    sh "echo ${line} >> ${path}"
 }
