@@ -252,7 +252,7 @@ pipeline{
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "namespace: ${namespace}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "storage: ${pvStorage}")
-                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep storage:", returnStdout: true).trim()
+                                linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep path:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
                             }
 
