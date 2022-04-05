@@ -233,7 +233,7 @@ pipeline{
                             }
 
                             //Persistent volume claim
-                            if(pvStorage.length() > 0 && pvPath.length() > 0)
+                            if(pvcStorage.length() > 0 && pvPath.length() > 0)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep name:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "name: ${name}-pvc")
@@ -244,7 +244,7 @@ pipeline{
                             }
 
                             //Persistent Volume
-                            if(pvcStorage.length() > 0)
+                            if(pvStorage.length() > 0)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "name: ${name}-pv")
