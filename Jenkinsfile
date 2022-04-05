@@ -233,7 +233,7 @@ pipeline{
                             }
 
                             //Persistent volume claim
-                            if(pvcStorage.length() > 0 && pvPath.length() > 0)
+                            if(pvcStorage.length() > 0 && pvPath.length() > 0 && volumeClaim == true)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep name:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "name: ${name}-pvc")
@@ -241,10 +241,16 @@ pipeline{
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "namespace: ${namespace}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-pvc.yaml | egrep storage:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "storage: ${pvcStorage}")
+                                sh "cat ./Kubernetes/template/template-pvc.yaml"
+                            }
+                            else
+                            {
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
                             }
 
                             //Persistent Volume
-                            if(pvStorage.length() > 0)
+                            if(pvStorage.length() > 0 && volumeClaim == true)
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep name:" , returnStdout: true).trim()
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "name: ${name}-pv")
@@ -255,6 +261,12 @@ pipeline{
                                 linea = sh(script: "cat ./Kubernetes/template/template-pv.yaml | egrep path:", returnStdout: true).trim()
                                 pvPath = pvPath.replace("/", "\\/")
                                 modificarArchivo("template", "template-pv.yaml", "temporal_template-pv.yaml", linea, "path: ${pvPath}")
+                                sh "cat ./Kubernetes/template/template-pv.yaml"
+                            }
+                            else
+                            {
+                                currentBuild.result = "FAILURE"
+                                throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
                             }
 
                             //Service
@@ -270,6 +282,7 @@ pipeline{
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "- nodePort: ${nodePort}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep port:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "port: ${servicePort}")
+                                sh "cat ./Kubernetes/template/template-service.yaml"
                             }
                         }
                     }
