@@ -244,7 +244,7 @@ pipeline{
                                 modificarArchivo("template", "template-pvc.yaml", "temporal_template-pvc.yaml", linea, "storage: ${pvcStorage}")
                                 sh "cat ./Kubernetes/template/template-pvc.yaml"
                             }
-                            else if(volumeClaim)
+                            else if(volumeClaimExists)
                             {
                                 currentBuild.result = "FAILURE"
                                 throw new Exception("Deplyoment requires a persistent volume claim, variable data are not filled")
