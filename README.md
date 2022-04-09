@@ -51,8 +51,23 @@
   </tr>
   <tr>
     <td>NOMBRE_MS</td>
-    <td>Text parameter</td>
+    <td>Text</td>
     <td>Name that will use microservice</td>
+  </tr>
+  <tr>
+    <td>INT</td>
+    <td>Boolean</td>
+    <td>Launch microservice over preproduction environment</td>
+  </tr>
+  <tr>
+    <td>PROD</td>
+    <td>Boolean</td>
+    <td>Launch microservice over production environment</td>
+  </tr>
+  <tr>
+    <td>TEMPLATE</td>
+    <td>Boolean</td>
+    <td>Launch microservice using a kubernetes <a href="https://github.com/MartiMarch/Kubernetes/tree/main/template">template</a></td>
   </tr>
 </table>
 <h3>Preproduction/Production deployment</h3>
