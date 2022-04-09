@@ -42,4 +42,18 @@
     <td>File path with all knowed ports</td>
   </tr>
 </table>
+- Add the following input parameters in jenkins pipeline configuration:<br><br>
+<table>
+  <tr>
+    <td>NAME</td>
+    <td>TYPE</td>
+    <td>DESCRIPTION</td>
+  </tr>
+  <tr>
+    <td>NOMBRE_MS</td>
+    <td>Text parameter</td>
+    <td>Name that will use microservice</td>
+  </tr>
+</table>
 <h3>Preproduction/Production deployment</h3>
+<p align="justify">To deploy a microservice into preproduction/production environemnt selecte 
