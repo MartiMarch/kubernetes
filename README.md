@@ -5,8 +5,8 @@
 <p align="justify">This repositoriy contains a pipeline that allow to launch microservices into a kubernetes cluster.</p>
 
 <h3>Requeriments</h3>
-- Jenkins
-- Git
+- Jenkins<br>
+- Git<br>
 - Kubernetes token as jenkins secret text
 - Kubeconfig file as jenkins secret file
 - Git user if repositoriy as jenkins secret text
