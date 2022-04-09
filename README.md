@@ -11,7 +11,7 @@
 - <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubeconfig file</a> as jenkins secret file<br>
 - Git user if repositoriy is private as jenkins secret text</br>
 - Git token if repository is private as jenkins secret text</br>
-- Fill the next pipeline parameters (<a href="https://github.com/MartiMarch/Kubernetes/blob/main/Jenkinsfile">line 6</a>):</br>
+- Fill the next pipeline parameters (<a href="https://github.com/MartiMarch/Kubernetes/blob/main/Jenkinsfile">line 6</a>):</br><br>
 <table>
   <tr>
     <td>GH_URL</td>
