@@ -17,13 +17,13 @@
     <td>GH_URL</td>
     <td>Git URL where pipeline are stored</td>
   </tr>
-  <td>
-    </td>GH_USER<td>
+  <tr>
+    <td>GH_USER</td>
     <td>FGit used</td>
   </tr>
   <tr>
     <td>K_URL</td>
-    <td>Master kubernetes node url</td>
+    <td>Master kubernetes node <a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">url</a></td>
   </tr>
   <tr>
     <td>FIRST_RANGE_PORT</td>
