@@ -255,7 +255,7 @@ pipeline{
                             {
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep name:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "name: ${name}")
-                                inea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep namespace:", returnStdout: true).trim()
+                                linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep namespace:", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "namespace: ${namespace}")
                                 linea = sh(script: "cat ./Kubernetes/template/template-service.yaml | egrep app: | head -1", returnStdout: true).trim()
                                 modificarArchivo("template", "template-service.yaml", "temporal_template-service.yaml", linea, "app: ${name}")
