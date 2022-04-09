@@ -7,8 +7,8 @@
 <h3>Requeriments</h3>
 - Jenkins
 - Git
-<p align="justify">- Kubernetes token as jenkins secret text</p>
-<p align="justify">- Kubeconfig file as jenkins secret file</p>
-<p align="justify">- Git user if repositoriy as jenkins secret text</p>
-<p align="justify">- Git token if repository as jenkins secret text</p>
-<p align="justify">- Fill the next parameters:</p>
+- Kubernetes token as jenkins secret text
+- Kubeconfig file as jenkins secret file
+- Git user if repositoriy as jenkins secret text
+- Git token if repository as jenkins secret text
+- Fill the next parameters:
