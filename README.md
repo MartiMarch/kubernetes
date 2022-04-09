@@ -12,3 +12,33 @@
 - Git user if repositoriy is private as jenkins secret text</br>
 - Git token if repository is private as jenkins secret text</br>
 - Fill the next pipeline parameters (<a href="https://github.com/MartiMarch/Kubernetes/blob/main/Jenkinsfile">line 6</a>):</br>
+<table>
+  <tr>
+    <td>GH_URL</td>
+    <td>Git URL where pipeline are stored</td>
+  </tr>
+  <td>
+    </td>GH_USER<td>
+    <td>FGit used</td>
+  </tr>
+  <tr>
+    <td>K_URL</td>
+    <td><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">Master kubernetes node url</a></td>
+  </tr>
+  <tr>
+    <td>FIRST_RANGE_PORT</td>
+    <td>First range port that microservice could use</td>
+  </tr>
+  <tr>
+    <td>FINAL_RANGE_PORT</td>
+    <td>Last range port that microservice could use</td>
+  </tr>
+  <tr>
+    <td>USED_PORTS</td>
+    <td>File path with all used ports</td>
+  </tr>
+  <tr>
+    <td>KNOWED_PORTS</td>
+    <td>File path with all knowed ports</td>
+  </tr>
+</table>
