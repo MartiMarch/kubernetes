@@ -71,4 +71,4 @@
   </tr>
 </table>
 <h3>Deploy a microservice over Preproduction/Production environments</h3>
-<p align="justify">To deploy a microservice over preproduction/production environemnt mark INT or INT as true. The namespace is a reference to a github subdirectory. For example, to deploy MySQL over prepoduction environment the value NOMBRE_MS has to be <a href="https://github.com/MartiMarch/Kubernetes/tree/main/mysql">mysql</a>.</p>
+<p align="justify">To deploy a microservice over preproduction/production environemnt mark INT or INT as true. The namespace is a reference to a github subdirectory. For example, to deploy MySQL over prepoduction environment the value NOMBRE_MS has to be <a href="https://github.com/MartiMarch/Kubernetes/tree/main/mysql">mysql</a>. Inside of subdirectory put yaml file. By now the kind of yaml files accepted are deployments, services, presistents volumes and persistents volume claims.</p>
