@@ -7,8 +7,8 @@
 <h3>Requeriments</h3>
 - Jenkins<br>
 - Git<br>
-- Kubernetes token as jenkins secret text<br>
-- Kubeconfig file as jenkins secret file<br>
+- <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-token/">Kubernetes token</a> as jenkins secret text<br>
+- <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubeconfig file</a> as jenkins secret file<br>
 - Git user if repositoriy as jenkins secret text</br>
 - Git token if repository as jenkins secret text</br>
-- Fill the next parameters:</br>
+- Fill the next pipeline parameters (<a href="https://github.com/MartiMarch/Kubernetes/blob/main/Jenkinsfile">line 6</a>):</br>
