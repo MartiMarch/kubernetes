@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td>K_URL</td>
-    <td><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">Master kubernetes node url</a></td>
+    <td>Master kubernetes node url</td>
   </tr>
   <tr>
     <td>FIRST_RANGE_PORT</td>
