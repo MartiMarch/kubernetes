@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td>GH_USER</td>
-    <td>FGit used</td>
+    <td>Git user</td>
   </tr>
   <tr>
     <td>K_URL</td>
